@@ -1,0 +1,325 @@
+
+package view;
+
+import utils.QuanLyPhien;
+
+/**
+ *
+ * @author lebao
+ */
+public class AdminForm extends javax.swing.JFrame {
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger
+            .getLogger(AdminForm.class.getName());
+    private javax.swing.JMenuItem activeMenuItem;
+    private pnlQuanLyNguoiDung pnlQuanLyNguoiDungView;
+    private pnlQuanLyBoCauHoi pnlQuanLyBoCauHoiView;
+    private pnlQuanLyMonHoc pnlQuanLyMonHocView;
+    private pnlTaiLenBoCauHoi pnlTaiLenBoCauHoiView;
+    private pnlThongKeBaoCao pnlThongKeBaoCaoView;
+    private static final java.awt.Color MENU_DEFAULT_BG = new java.awt.Color(245, 245, 255);
+    private static final java.awt.Color MENU_HOVER_BG = new java.awt.Color(230, 230, 255);
+    private static final java.awt.Color MENU_ACTIVE_BG = new java.awt.Color(153, 153, 255);
+    private static final java.awt.Color MENU_DEFAULT_FG = new java.awt.Color(80, 80, 80);
+
+    /**
+     * Creates new form AdminForm
+     */
+    public AdminForm() {// btnTaiLenBoCauHoi
+        initComponents();
+        setLocationRelativeTo(null);
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        pnlMain.setLayout(new java.awt.CardLayout());
+        pnlQuanLyNguoiDungView = new pnlQuanLyNguoiDung();
+        pnlQuanLyBoCauHoiView = new pnlQuanLyBoCauHoi();
+        pnlQuanLyMonHocView = new pnlQuanLyMonHoc();
+        pnlTaiLenBoCauHoiView = new pnlTaiLenBoCauHoi();
+        pnlThongKeBaoCaoView = new pnlThongKeBaoCao();
+        pnlMain.add(pnlQuanLyNguoiDungView, "NGUOI_DUNG");
+        pnlMain.add(pnlQuanLyBoCauHoiView, "BO_CAU_HOI");
+        pnlMain.add(pnlQuanLyMonHocView, "MON_HOC");
+        pnlMain.add(pnlTaiLenBoCauHoiView, "TAI_LEN");
+        pnlMain.add(pnlThongKeBaoCaoView, "THONG_KE");
+
+        customMenuItem(btnQuanLyNguoiDung);
+        customMenuItem(btnQuanLyBoCauHoi);
+        customMenuItem(btnQuanLyMonHoc);
+        customMenuItem(btnTaiLenBoCauHoi);
+        customMenuItem(btnThongKe);
+
+        addMenuEffect(btnQuanLyNguoiDung, "NGUOI_DUNG");
+        addMenuEffect(btnQuanLyBoCauHoi, "BO_CAU_HOI");
+        addMenuEffect(btnQuanLyMonHoc, "MON_HOC");
+        addMenuEffect(btnTaiLenBoCauHoi, "TAI_LEN");
+        addMenuEffect(btnThongKe, "THONG_KE");
+
+        // Mặc định chọn quản lý bộ câu hỏi
+        setActiveMenu(btnThongKe);
+        refreshCardData("THONG_KE");
+        ((java.awt.CardLayout) pnlMain.getLayout()).show(pnlMain, "THONG_KE");
+    }
+
+    private void customMenuItem(javax.swing.JMenuItem item) {
+        item.setOpaque(true);
+        item.setBackground(MENU_DEFAULT_BG);
+        item.setForeground(MENU_DEFAULT_FG);
+    }
+
+    private void addMenuEffect(javax.swing.JMenuItem item, String cardName) {
+        item.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                if (item != activeMenuItem) {
+                    item.setBackground(MENU_HOVER_BG);
+                }
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                if (item != activeMenuItem) {
+                    item.setBackground(MENU_DEFAULT_BG);
+                }
+            }
+        });
+
+        item.addActionListener(e -> {
+            setActiveMenu(item);
+            refreshCardData(cardName);
+            java.awt.CardLayout cl = (java.awt.CardLayout) pnlMain.getLayout();
+            cl.show(pnlMain, cardName);
+        });
+    }
+
+    private void refreshCardData(String cardName) {
+        switch (cardName) {
+            case "NGUOI_DUNG":
+                if (pnlQuanLyNguoiDungView != null) {
+                    pnlQuanLyNguoiDungView.loadTable();
+                }
+                break;
+            case "BO_CAU_HOI":
+                if (pnlQuanLyBoCauHoiView != null) {
+                    pnlQuanLyBoCauHoiView.refreshData();
+                }
+                break;
+            case "MON_HOC":
+                if (pnlQuanLyMonHocView != null) {
+                    pnlQuanLyMonHocView.refreshData();
+                }
+                break;
+            case "THONG_KE":
+                if (pnlThongKeBaoCaoView != null) {
+                    pnlThongKeBaoCaoView.loadData();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setActiveMenu(javax.swing.JMenuItem item) {
+        if (activeMenuItem != null) {
+            activeMenuItem.setBackground(MENU_DEFAULT_BG);
+            activeMenuItem.setForeground(MENU_DEFAULT_FG);
+        }
+        activeMenuItem = item;
+        item.setBackground(MENU_ACTIVE_BG);
+        item.setForeground(java.awt.Color.WHITE);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jFrame1 = new javax.swing.JFrame();
+        jFrame2 = new javax.swing.JFrame();
+        jFrame3 = new javax.swing.JFrame();
+        pnlMain = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        btnQuanLyNguoiDung = new javax.swing.JMenuItem();
+        btnQuanLyMonHoc = new javax.swing.JMenuItem();
+        btnQuanLyBoCauHoi = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        btnCapNhatThongTin = new javax.swing.JMenuItem();
+        btnTaiLenBoCauHoi = new javax.swing.JMenuItem();
+        btnThongKe = new javax.swing.JMenuItem();
+        btnDangXuat = new javax.swing.JMenuItem();
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+                jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE));
+        jFrame1Layout.setVerticalGroup(
+                jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE));
+
+        javax.swing.GroupLayout jFrame2Layout = new javax.swing.GroupLayout(jFrame2.getContentPane());
+        jFrame2.getContentPane().setLayout(jFrame2Layout);
+        jFrame2Layout.setHorizontalGroup(
+                jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE));
+        jFrame2Layout.setVerticalGroup(
+                jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE));
+
+        javax.swing.GroupLayout jFrame3Layout = new javax.swing.GroupLayout(jFrame3.getContentPane());
+        jFrame3.getContentPane().setLayout(jFrame3Layout);
+        jFrame3Layout.setHorizontalGroup(
+                jFrame3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE));
+        jFrame3Layout.setVerticalGroup(
+                jFrame3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE));
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        pnlMain.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
+        pnlMain.setLayout(pnlMainLayout);
+        pnlMainLayout.setHorizontalGroup(
+                pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1508, Short.MAX_VALUE));
+        pnlMainLayout.setVerticalGroup(
+                pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 1038, Short.MAX_VALUE));
+
+        jMenu1.setText("Quản lý");
+        jMenu1.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+
+        btnQuanLyNguoiDung.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnQuanLyNguoiDung.setText("Quản lý người dùng");
+        btnQuanLyNguoiDung.addActionListener(this::btnQuanLyNguoiDungActionPerformed);
+        jMenu1.add(btnQuanLyNguoiDung);
+
+        btnQuanLyMonHoc.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnQuanLyMonHoc.setText("Quản lý môn học");
+        btnQuanLyMonHoc.addActionListener(this::btnQuanLyMonHocActionPerformed);
+        jMenu1.add(btnQuanLyMonHoc);
+
+        btnQuanLyBoCauHoi.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnQuanLyBoCauHoi.setText("Quản lý bộ câu hỏi");
+        btnQuanLyBoCauHoi.addActionListener(this::btnQuanLyBoCauHoiActionPerformed);
+        jMenu1.add(btnQuanLyBoCauHoi);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Hệ thống");
+        jMenu2.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+
+        btnCapNhatThongTin.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnCapNhatThongTin.setText("Cập nhật thông tin");
+        btnCapNhatThongTin.addActionListener(this::btnCapNhatThongTinActionPerformed);
+        jMenu2.add(btnCapNhatThongTin);
+
+        btnTaiLenBoCauHoi.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnTaiLenBoCauHoi.setText("Tải lên bộ câu hỏi");
+        jMenu2.add(btnTaiLenBoCauHoi);
+
+        btnThongKe.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnThongKe.setText("Thống kê & Báo cáo");
+        jMenu2.add(btnThongKe);
+
+        btnDangXuat.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnDangXuat.setText("Đăng xuất");
+        btnDangXuat.addActionListener(this::btnDangXuatActionPerformed);
+        jMenu2.add(btnDangXuat);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnDangXuatActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnDangXuatActionPerformed
+        QuanLyPhien.dangXuat();
+        new FrmDangNhap().setVisible(true);
+        this.dispose();
+        setLocationRelativeTo(null);
+    }// GEN-LAST:event_btnDangXuatActionPerformed
+
+    private void btnQuanLyNguoiDungActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnQuanLyNguoiDungActionPerformed
+
+    }// GEN-LAST:event_btnQuanLyNguoiDungActionPerformed
+
+    private void btnCapNhatThongTinActionPerformed(java.awt.event.ActionEvent evt) {
+        new FrmCapNhatThongTin().setVisible(true);
+        setLocationRelativeTo(null);
+    }
+
+    private void btnQuanLyBoCauHoiActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnQuanLyBoCauHoiActionPerformed
+        // xử lý chuyển panel thực hiện trong addMenuEffect
+    }// GEN-LAST:event_btnQuanLyBoCauHoiActionPerformed
+
+    private void btnQuanLyMonHocActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnQuanLyMonHocActionPerformed
+        // xử lý chuyển panel thực hiện trong addMenuEffect
+    }// GEN-LAST:event_btnQuanLyMonHocActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        // </editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new AdminForm().setVisible(true));
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem btnCapNhatThongTin;
+    private javax.swing.JMenuItem btnDangXuat;
+    private javax.swing.JMenuItem btnQuanLyBoCauHoi;
+    private javax.swing.JMenuItem btnQuanLyMonHoc;
+    private javax.swing.JMenuItem btnQuanLyNguoiDung;
+    private javax.swing.JMenuItem btnTaiLenBoCauHoi;
+    private javax.swing.JMenuItem btnThongKe;
+    private javax.swing.JFrame jFrame1;
+    private javax.swing.JFrame jFrame2;
+    private javax.swing.JFrame jFrame3;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel pnlMain;
+    // End of variables declaration//GEN-END:variables
+}
