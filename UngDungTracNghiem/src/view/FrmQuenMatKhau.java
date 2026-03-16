@@ -533,7 +533,10 @@ public class FrmQuenMatKhau extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmQuenMatKhau().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+            utils.UiEnhancer.install();
+            new FrmQuenMatKhau().setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

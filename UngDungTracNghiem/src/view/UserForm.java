@@ -260,7 +260,10 @@ public class UserForm extends javax.swing.JFrame {
         // </editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new UserForm().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+            utils.UiEnhancer.install();
+            new UserForm().setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

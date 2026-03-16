@@ -16,6 +16,9 @@ import java.util.Timer;
 import java.sql.Date;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.Position;
 
 /**
  *
@@ -27,6 +30,9 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
             .getLogger(FrmLamBaiThi.class.getName());
     private int maxSoCauHoi = 0; // Số câu hỏi tối đa của bộ câu hỏi hiện tại
     private boolean isUpdatingCombo = false;
+    private final int kichThuocNutCau = 36;
+    private final LineBorder vienNutCauBinhThuong = new LineBorder(new Color(153, 153, 255), 1, true);
+    private final LineBorder vienNutCauDangChon = new LineBorder(new Color(0, 120, 215), 3, true);
     // DAO instances
     private CapHocDAO capHocDAO = new CapHocDAO();
     private MonHocDAO monHocDAO = new MonHocDAO();
@@ -40,6 +46,7 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
     private List<DapAn> danhSachDapAn;
     private Map<Integer, Integer> dapAnDaChon = new HashMap<>();
     private Map<Integer, List<DapAn>> thuTuDapAnDaTron = new HashMap<>(); // Lưu thứ tự đáp án đã trộn theo cauHoiId
+    private List<JButton> danhSachNutCau = new ArrayList<>();
     private int cauHienTai = 0;
     private Timer timer;
     private int thoiGianConLai;
@@ -67,6 +74,8 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
                 BorderFactory.createCompoundBorder(
                         new LineBorder(new Color(153, 153, 255), 2, true),
                         new EmptyBorder(8, 8, 8, 8)));
+        taCauHoi.putClientProperty(utils.UiEnhancer.PROP_DISABLE_TEXT_COPY_PASTE, Boolean.TRUE);
+        voHieuHoaSaoChepVaChonNoiDung(taCauHoi);
 
         // Thêm ButtonGroup cho radio buttons
         bgDapAn.add(rbDapAn1);
@@ -98,6 +107,7 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
         btnCauTruoc.setVisible(false);
         btnTiepTheo.setVisible(false);
         btnNopBai.setVisible(false);
+        spDanhSachCau.setVisible(false);
 
         loadCapHoc();
         loadMonHoc();
@@ -113,6 +123,37 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
         addHoverEffect(btnTiepTheo);
         addHoverEffect(btnNopBai);
         addHoverEffect(btnYeuThich);
+    }
+
+    private void voHieuHoaSaoChepVaChonNoiDung(JTextArea textArea) {
+        textArea.setTransferHandler(null);
+        textArea.setFocusable(false);
+        textArea.setCaret(new DefaultCaret() {
+            @Override
+            public void moveDot(int dot) {
+                setDot(dot);
+            }
+
+            @Override
+            public void moveDot(int dot, Position.Bias bias) {
+                setDot(dot, bias);
+            }
+        });
+
+        InputMap inputMap = textArea.getInputMap(JComponent.WHEN_FOCUSED);
+        inputMap.put(KeyStroke.getKeyStroke("ctrl C"), "none");
+        inputMap.put(KeyStroke.getKeyStroke("ctrl INSERT"), "none");
+        inputMap.put(KeyStroke.getKeyStroke("ctrl X"), "none");
+        inputMap.put(KeyStroke.getKeyStroke("shift DELETE"), "none");
+        inputMap.put(KeyStroke.getKeyStroke("ctrl V"), "none");
+        inputMap.put(KeyStroke.getKeyStroke("shift INSERT"), "none");
+        inputMap.put(KeyStroke.getKeyStroke("ctrl A"), "none");
+
+        ActionMap actionMap = textArea.getActionMap();
+        actionMap.remove(DefaultEditorKit.copyAction);
+        actionMap.remove(DefaultEditorKit.cutAction);
+        actionMap.remove(DefaultEditorKit.pasteAction);
+        actionMap.remove(DefaultEditorKit.selectAllAction);
     }
 
     private void addHoverEffect(JButton btn) {
@@ -150,7 +191,8 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
                 jLabel6, jLabel7, jLabel8, jLabel9, jLabel10,
                 lblTimer, lblCauHienTai,
                 rbDapAn1, rbDapAn2, rbDapAn3, rbDapAn4,
-                btnCauTruoc, btnTiepTheo, btnNopBai
+                btnCauTruoc, btnTiepTheo, btnNopBai,
+                spDanhSachCau
         };
 
         for (Component control : controlsCanAn) {
@@ -345,6 +387,7 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
             int cauHoiId = danhSachCauHoi.get(cauHienTai).getCauHoiId();
             int dapAnId = danhSachDapAn.get(selectedIndex).getDapAnId();
             dapAnDaChon.put(cauHoiId, dapAnId);
+            capNhatTrangThaiNutCau(cauHienTai);
         }
     }
 
@@ -415,6 +458,148 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
 
         // Cập nhật trạng thái nút yêu thích
         updateFavoriteButtonState(ch.getCauHoiId());
+        capNhatTrangThaiDanhSachCau();
+    }
+
+    private void taoDanhSachNutCau() {
+        danhSachNutCau.clear();
+        pnDanhSachCau.removeAll();
+
+        if (danhSachCauHoi == null || danhSachCauHoi.isEmpty()) {
+            pnDanhSachCau.revalidate();
+            pnDanhSachCau.repaint();
+            return;
+        }
+
+        pnDanhSachCau.setLayout(new BoTriTuDongXuongDong(FlowLayout.CENTER, 8, 8));
+        pnDanhSachCau.setBorder(new EmptyBorder(8, 8, 8, 8));
+
+        for (int i = 0; i < danhSachCauHoi.size(); i++) {
+            int chiSoCau = i;
+
+            JButton nutCau = new JButton(String.valueOf(i + 1));
+            nutCau.setFont(new Font("Helvetica Neue", Font.BOLD, 14));
+            nutCau.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            nutCau.setFocusPainted(false);
+            nutCau.setOpaque(true);
+            nutCau.setContentAreaFilled(true);
+            nutCau.setMargin(new Insets(0, 0, 0, 0));
+            nutCau.setBorder(vienNutCauBinhThuong);
+            Dimension kichThuocCoDinh = new Dimension(kichThuocNutCau, kichThuocNutCau);
+            nutCau.setPreferredSize(kichThuocCoDinh);
+            nutCau.setMinimumSize(kichThuocCoDinh);
+            nutCau.setMaximumSize(kichThuocCoDinh);
+            nutCau.addActionListener(e -> chuyenDenCau(chiSoCau));
+
+            danhSachNutCau.add(nutCau);
+            pnDanhSachCau.add(nutCau);
+        }
+
+        capNhatTrangThaiDanhSachCau();
+        pnDanhSachCau.revalidate();
+        pnDanhSachCau.repaint();
+    }
+
+    private void chuyenDenCau(int chiSoCau) {
+        if (danhSachCauHoi == null)
+            return;
+        if (chiSoCau < 0 || chiSoCau >= danhSachCauHoi.size())
+            return;
+        cauHienTai = chiSoCau;
+        hienThiCauHoi();
+    }
+
+    private void capNhatTrangThaiNutCau(int chiSoCau) {
+        if (danhSachCauHoi == null || danhSachNutCau == null)
+            return;
+        if (chiSoCau < 0 || chiSoCau >= danhSachCauHoi.size())
+            return;
+        if (chiSoCau >= danhSachNutCau.size())
+            return;
+
+        int cauHoiId = danhSachCauHoi.get(chiSoCau).getCauHoiId();
+        JButton nutCau = danhSachNutCau.get(chiSoCau);
+        boolean daLam = dapAnDaChon.containsKey(cauHoiId);
+        nutCau.setBackground(daLam ? new Color(198, 239, 206) : Color.WHITE);
+        nutCau.setForeground(Color.BLACK);
+        nutCau.setBorder(chiSoCau == cauHienTai ? vienNutCauDangChon : vienNutCauBinhThuong);
+    }
+
+    private void capNhatTrangThaiDanhSachCau() {
+        if (danhSachCauHoi == null || danhSachNutCau == null || danhSachNutCau.isEmpty())
+            return;
+        int soCau = Math.min(danhSachCauHoi.size(), danhSachNutCau.size());
+        for (int i = 0; i < soCau; i++) {
+            capNhatTrangThaiNutCau(i);
+        }
+    }
+
+    private static class BoTriTuDongXuongDong extends FlowLayout {
+        BoTriTuDongXuongDong(int canhLe, int khoangCachNgang, int khoangCachDoc) {
+            super(canhLe, khoangCachNgang, khoangCachDoc);
+        }
+
+        @Override
+        public Dimension preferredLayoutSize(Container target) {
+            return tinhKichThuocBoTri(target, true);
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(Container target) {
+            Dimension minimum = tinhKichThuocBoTri(target, false);
+            minimum.width -= (getHgap() + 1);
+            return minimum;
+        }
+
+        private Dimension tinhKichThuocBoTri(Container target, boolean uuTien) {
+            synchronized (target.getTreeLock()) {
+                int chieuRongMucTieu = target.getWidth();
+                if (chieuRongMucTieu <= 0) {
+                    chieuRongMucTieu = Integer.MAX_VALUE;
+                }
+
+                Insets insets = target.getInsets();
+                int chieuRongToiDa = chieuRongMucTieu - (insets.left + insets.right + getHgap() * 2);
+
+                int chieuRongDong = 0;
+                int chieuCaoDong = 0;
+                Dimension kichThuoc = new Dimension(0, 0);
+
+                int soThanhPhan = target.getComponentCount();
+                for (int i = 0; i < soThanhPhan; i++) {
+                    Component c = target.getComponent(i);
+                    if (!c.isVisible())
+                        continue;
+
+                    Dimension d = uuTien ? c.getPreferredSize() : c.getMinimumSize();
+
+                    if (chieuRongDong + d.width > chieuRongToiDa) {
+                        themDong(kichThuoc, chieuRongDong, chieuCaoDong);
+                        chieuRongDong = 0;
+                        chieuCaoDong = 0;
+                    }
+
+                    if (chieuRongDong != 0) {
+                        chieuRongDong += getHgap();
+                    }
+                    chieuRongDong += d.width;
+                    chieuCaoDong = Math.max(chieuCaoDong, d.height);
+                }
+
+                themDong(kichThuoc, chieuRongDong, chieuCaoDong);
+                kichThuoc.width += insets.left + insets.right + getHgap() * 2;
+                kichThuoc.height += insets.top + insets.bottom + getVgap() * 2;
+                return kichThuoc;
+            }
+        }
+
+        private void themDong(Dimension kichThuoc, int chieuRongDong, int chieuCaoDong) {
+            kichThuoc.width = Math.max(kichThuoc.width, chieuRongDong);
+            if (kichThuoc.height > 0) {
+                kichThuoc.height += getVgap();
+            }
+            kichThuoc.height += chieuCaoDong;
+        }
     }
 
     private void updateFavoriteButtonState(int cauHoiId) {
@@ -483,6 +668,8 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
         btnTaiLai = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         taCauHoi = new javax.swing.JTextArea();
+        spDanhSachCau = new javax.swing.JScrollPane();
+        pnDanhSachCau = new javax.swing.JPanel();
         spThoiGian = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
         chkMaxCauHoi = new javax.swing.JCheckBox();
@@ -551,6 +738,11 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
         taCauHoi.setRows(5);
         taCauHoi.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
         jScrollPane2.setViewportView(taCauHoi);
+
+        spDanhSachCau.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 2, true));
+        spDanhSachCau.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        pnDanhSachCau.setBackground(new java.awt.Color(255, 255, 255));
+        spDanhSachCau.setViewportView(pnDanhSachCau);
 
         spThoiGian.setModel(new javax.swing.SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
         spThoiGian.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
@@ -692,10 +884,18 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
                                                         .addGroup(jPanel1Layout
                                                                 .createParallelGroup(
                                                                         javax.swing.GroupLayout.Alignment.LEADING,
-                                                                        false)
-                                                                .addComponent(jScrollPane2,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 941,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                false)
+                                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                        .addComponent(jScrollPane2,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                941,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                        .addComponent(spDanhSachCau,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                240,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
                                                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                                                         .addComponent(jLabel7)
                                                                         .addPreferredGap(
@@ -838,10 +1038,14 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(btnBatDau, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(btnTaiLai, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                38, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 402,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(btnTaiLai, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                        38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(jPanel1Layout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 402,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(spDanhSachCau, javax.swing.GroupLayout.PREFERRED_SIZE, 402,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(32, 32, 32)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(btnCauTruoc, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
@@ -920,6 +1124,7 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
             danhSachCauHoi = danhSachCauHoi.subList(0, soCau);
 
         cauHienTai = 0;
+        taoDanhSachNutCau();
         hienThiCauHoi();
 
         // Hiển thị
@@ -939,6 +1144,7 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
         btnNopBai.setVisible(true);
         lblCauHienTai.setVisible(true);
         btnYeuThich.setVisible(true);
+        spDanhSachCau.setVisible(true);
 
         // Ẩn
         btnThoat.setVisible(false);
@@ -1059,13 +1265,26 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
             return;
         int userId = QuanLyPhien.layIdNguoiDungHienTai();
         int cauHoiId = danhSachCauHoi.get(cauHienTai).getCauHoiId();
-        if (cauHoiDAO.toggleFavorite(userId, cauHoiId)) {
-            updateFavoriteButtonState(cauHoiId);
-            if (cauHoiDAO.isFavorite(userId, cauHoiId)) {
-                JOptionPane.showMessageDialog(this, "Đã thêm vào câu hỏi yêu thích! ❤️");
-            } else {
-                JOptionPane.showMessageDialog(this, "Đã bỏ yêu thích! 🤍");
-            }
+        boolean dangYeuThich = cauHoiDAO.isFavorite(userId, cauHoiId);
+
+        // Nếu câu hỏi thuộc bộ câu hỏi không công khai thì không cho thêm vào yêu thích.
+        if (!dangYeuThich && !cauHoiDAO.isCauHoiCongKhai(cauHoiId)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Câu hỏi thuộc bộ câu hỏi không công khai nên bạn không thể thêm vào yêu thích.");
+            return;
+        }
+
+        if (!cauHoiDAO.toggleFavorite(userId, cauHoiId)) {
+            JOptionPane.showMessageDialog(this, "Không thể cập nhật trạng thái yêu thích. Vui lòng thử lại.");
+            return;
+        }
+
+        updateFavoriteButtonState(cauHoiId);
+        if (!dangYeuThich) {
+            JOptionPane.showMessageDialog(this, "Đã thêm vào câu hỏi yêu thích! ❤️");
+        } else {
+            JOptionPane.showMessageDialog(this, "Đã bỏ yêu thích! 🤍");
         }
     }
 
@@ -1095,7 +1314,10 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
         // </editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmLamBaiThi().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+            utils.UiEnhancer.install();
+            new FrmLamBaiThi().setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1123,10 +1345,12 @@ public class FrmLamBaiThi extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblCauHienTai;
     private javax.swing.JLabel lblTimer;
+    private javax.swing.JPanel pnDanhSachCau;
     private javax.swing.JRadioButton rbDapAn1;
     private javax.swing.JRadioButton rbDapAn2;
     private javax.swing.JRadioButton rbDapAn3;
     private javax.swing.JRadioButton rbDapAn4;
+    private javax.swing.JScrollPane spDanhSachCau;
     private javax.swing.JSpinner spSoCauHoi;
     private javax.swing.JSpinner spThoiGian;
     private javax.swing.JTextArea taCauHoi;

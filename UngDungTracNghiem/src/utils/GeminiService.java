@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class GeminiService {
 
     // Có thể override bằng biến môi trường GEMINI_API_KEY hoặc JVM arg -Dgemini.api.key=...
-    private static final String HARDCODED_API_KEY = "AIzaSyAQdXJdYpui0xdbpkmu_W23eqWlnCf8NNI";
+    private static final String HARDCODED_API_KEY = "Gemini_Key_Của_Bạn_Ở_Đây"; // <-- Thay thế bằng API key của bạn nếu muốn hardcode
     private static final String API_BASE = "https://generativelanguage.googleapis.com/v1beta/models/";
     private static final String DEFAULT_MODEL = "gemini-flash-latest";
     private static final String[] FALLBACK_MODELS = {

@@ -303,7 +303,10 @@ public class AdminForm extends javax.swing.JFrame {
         // </editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new AdminForm().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+            utils.UiEnhancer.install();
+            new AdminForm().setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

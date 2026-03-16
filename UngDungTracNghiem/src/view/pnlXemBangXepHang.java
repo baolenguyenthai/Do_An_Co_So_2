@@ -63,7 +63,9 @@ public class pnlXemBangXepHang extends javax.swing.JPanel {
                 List<Object[]> data = baiThiDAO.getBangXepHang(name, subject, grade);
                 tableModel.setRowCount(0);
                 for (Object[] row : data) {
-                        tableModel.addRow(row);
+                        tableModel.addRow(new Object[] {
+                                        row[0], row[1], row[2], row[3], row[4], row[5], row[6]
+                        });
                 }
         }
 

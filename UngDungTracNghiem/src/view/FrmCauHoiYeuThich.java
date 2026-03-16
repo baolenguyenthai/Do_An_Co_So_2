@@ -211,7 +211,10 @@ public class FrmCauHoiYeuThich extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new FrmCauHoiYeuThich().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+            utils.UiEnhancer.install();
+            new FrmCauHoiYeuThich().setVisible(true);
+        });
     }
 
     private javax.swing.JButton btnBack;

@@ -7,6 +7,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CauHoiDAO {
+    public boolean isCauHoiCongKhai(int cauHoiId) {
+        String sql = "SELECT bch.cong_khai " +
+                "FROM cau_hoi ch " +
+                "JOIN bo_cau_hoi bch ON ch.bo_cau_hoi_id = bch.bo_cau_hoi_id " +
+                "WHERE ch.cau_hoi_id = ?";
+        try (Connection conn = KetNoiDB.ketNoi();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, cauHoiId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public int themCauHoi(CauHoi ch) {
         String sql = "INSERT INTO cau_hoi(bo_cau_hoi_id, noi_dung, muc_do) VALUES (?, ?, ?)";
         try (Connection conn = KetNoiDB.ketNoi();

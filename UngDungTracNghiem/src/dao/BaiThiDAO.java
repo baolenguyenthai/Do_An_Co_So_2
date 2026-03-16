@@ -158,7 +158,7 @@ public class BaiThiDAO {
     public List<Object[]> getBangXepHang(String tenNguoiDung, String tenMonHoc, String tenCapHoc) {
         List<Object[]> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-                "SELECT nd.ho_ten, mh.ten_mon_hoc, ch.ten_cap_hoc, bt.diem, bt.so_cau_dung, bt.tong_cau, bt.thoi_gian_ket_thuc "
+                "SELECT bt.bai_thi_id, bch.ten_bo_cau_hoi, nd.ho_ten, mh.ten_mon_hoc, ch.ten_cap_hoc, bt.diem, bt.so_cau_dung, bt.tong_cau, bt.thoi_gian_ket_thuc "
                         +
                         "FROM bai_thi bt " +
                         "JOIN nguoi_dung nd ON bt.nguoi_dung_id = nd.nguoi_dung_id " +
@@ -198,7 +198,70 @@ public class BaiThiDAO {
                         rs.getString("ten_cap_hoc"),
                         rs.getFloat("diem"),
                         rs.getInt("so_cau_dung") + "/" + rs.getInt("tong_cau"),
-                        rs.getTimestamp("thoi_gian_ket_thuc")
+                        rs.getTimestamp("thoi_gian_ket_thuc"),
+                        rs.getInt("bai_thi_id"),
+                        rs.getString("ten_bo_cau_hoi")
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Lấy bảng xếp hạng (có thời gian làm bài)
+    public List<Object[]> getBangXepHangCoThoiGianLamBai(String tenNguoiDung, String tenMonHoc, String tenCapHoc) {
+        List<Object[]> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT bt.bai_thi_id, bch.ten_bo_cau_hoi, nd.ho_ten, mh.ten_mon_hoc, ch.ten_cap_hoc, bt.diem, bt.so_cau_dung, bt.tong_cau, bt.thoi_gian_ket_thuc, "
+                        +
+                        "TIMESTAMPDIFF(SECOND, bt.thoi_gian_bat_dau, bt.thoi_gian_ket_thuc) AS thoi_luong_giay " +
+                        "FROM bai_thi bt " +
+                        "JOIN nguoi_dung nd ON bt.nguoi_dung_id = nd.nguoi_dung_id " +
+                        "JOIN bo_cau_hoi bch ON bt.bo_cau_hoi_id = bch.bo_cau_hoi_id " +
+                        "JOIN mon_hoc mh ON bch.mon_hoc_id = mh.mon_hoc_id " +
+                        "JOIN cap_hoc ch ON bch.cap_hoc_id = ch.cap_hoc_id " +
+                        "WHERE 1=1 ");
+
+        List<Object> thamSo = new ArrayList<>();
+        if (tenNguoiDung != null && !tenNguoiDung.trim().isEmpty()) {
+            sql.append(" AND nd.ho_ten LIKE ?");
+            thamSo.add("%" + tenNguoiDung + "%");
+        }
+        if (tenMonHoc != null && !tenMonHoc.equals("Tất cả")) {
+            sql.append(" AND mh.ten_mon_hoc = ?");
+            thamSo.add(tenMonHoc);
+        }
+        if (tenCapHoc != null && !tenCapHoc.equals("Tất cả")) {
+            sql.append(" AND ch.ten_cap_hoc = ?");
+            thamSo.add(tenCapHoc);
+        }
+
+        sql.append(" ORDER BY bt.diem DESC, bt.thoi_gian_ket_thuc ASC");
+
+        try (Connection conn = KetNoiDB.ketNoi();
+                PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < thamSo.size(); i++) {
+                ps.setObject(i + 1, thamSo.get(i));
+            }
+            ResultSet rs = ps.executeQuery();
+            int hang = 1;
+            while (rs.next()) {
+                int thoiLuongGiay = rs.getInt("thoi_luong_giay");
+                if (rs.wasNull()) {
+                    thoiLuongGiay = 0;
+                }
+                list.add(new Object[] {
+                        hang++,
+                        rs.getString("ho_ten"),
+                        rs.getString("ten_mon_hoc"),
+                        rs.getString("ten_cap_hoc"),
+                        rs.getFloat("diem"),
+                        rs.getInt("so_cau_dung") + "/" + rs.getInt("tong_cau"),
+                        thoiLuongGiay,
+                        rs.getTimestamp("thoi_gian_ket_thuc"),
+                        rs.getInt("bai_thi_id"),
+                        rs.getString("ten_bo_cau_hoi")
                 });
             }
         } catch (Exception e) {
