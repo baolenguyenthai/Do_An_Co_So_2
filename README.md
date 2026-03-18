@@ -1,6 +1,5 @@
-#  ỨNG DỤNG HỌC TẬP TRẮC NGHIỆM CÓ PHÂN QUYỀN
-
-*(Java + MySQL – Kiến trúc MVC)*
+# ỨNG DỤNG HỌC TẬP TRẮC NGHIỆM CÓ PHÂN QUYỀN
+*(Java Swing + MySQL – Kiến trúc MVC, phát triển bằng Apache NetBeans/Ant)*
 
 ---
 
@@ -8,146 +7,113 @@
 
 Link Drive: https://drive.google.com/drive/folders/1PwhJSnk0-OOAkqZtnZ4ZPp4JSW-d-v3W?usp=sharing
 
-## 1. Giới thiệu đề tài
+---
 
-Ứng dụng học tập trắc nghiệm có phân quyền là hệ thống hỗ trợ tạo, quản lý và làm bài thi trắc nghiệm trên máy tính.
+## 1. Giới thiệu
 
-Hệ thống được xây dựng nhằm:
+Ứng dụng hỗ trợ **tạo – quản lý – làm bài thi trắc nghiệm** trên máy tính, có **phân quyền ADMIN/USER** và lưu dữ liệu trên **MySQL**.
 
-* Hỗ trợ học tập và ôn luyện kiến thức
-* Quản lý ngân hàng câu hỏi
-* Tổ chức thi trắc nghiệm tự động
-* Thống kê và đánh giá kết quả học tập
+Điểm nổi bật:
 
-### Công nghệ sử dụng:
-
-* Ngôn ngữ lập trình: **Java**
-* Cơ sở dữ liệu: **MySQL**
-* Kiến trúc phần mềm: **MVC**
-* Kết nối CSDL: **JDBC**
-* IDE phát triển: **Apache NetBeans**
+* Đăng nhập/đăng ký, khoá tài khoản, quên mật khẩu bằng **OTP email**
+* Quản lý danh mục **Cấp học** và **Môn học**
+* Quản lý **Bộ câu hỏi / Câu hỏi / Đáp án** + duyệt bộ câu hỏi
+* Làm bài thi, chấm điểm tự động, lưu **lịch sử thi**
+* **Yêu thích câu hỏi**, xem bảng xếp hạng
+* Thống kê/báo cáo và **xuất báo cáo Excel**
+* Tính năng AI (Gemini): **tạo bộ câu hỏi** và **giải thích đáp án**
 
 ---
 
-## 2. Phân quyền hệ thống
+## 2. Công nghệ & thư viện
+
+* **Java** (UI: **Swing** + NetBeans `.form`)
+* **MySQL** + **JDBC**
+* Thư viện sử dụng (đã có trong `UngDungTracNghiem/dist/lib`):
+  * MySQL Connector/J
+  * Apache POI (Excel + Word `.docx`)
+  * OpenCSV
+  * Gson
+  * Jakarta Mail (gửi OTP)
+  * Log4j
+
+---
+
+## 3. Phân quyền hệ thống
+
+Trong bảng `nguoi_dung`:
+
+* `vai_tro_id = 1` → **ADMIN**
+* `vai_tro_id != 1` → **USER**
+* `trang_thai = 0` → tài khoản **bị khoá** (không đăng nhập được)
 
 ### ADMIN
 
-* Quản lý người dùng
-* Quản lý bộ câu hỏi
-* Quản lý danh mục (cấp học – môn học)
-* Thống kê và báo cáo hệ thống
-* Đặt lại mật khẩu của mình
-### NGƯỜI DÙNG
+* Quản lý người dùng: thêm/sửa/xoá, khoá/mở khoá, phân quyền
+* Quản lý bộ câu hỏi: duyệt/trạng thái, công khai/riêng tư, chỉnh sửa nội dung
+* Quản lý danh mục: cấp học – môn học
+* Thống kê & báo cáo + xuất Excel
 
-* Làm bài trắc nghiệm
-* Tải lên bộ câu hỏi
-* Quản lý bộ câu hỏi cá nhân
-* Xem kết quả học tập
-* Đặt lại mật khẩu của mình
----
+### USER
 
-## 3. Chức năng chi tiết
+* Làm bài trắc nghiệm, xem chi tiết bài thi
+* Xem lịch sử thi, bảng xếp hạng
+* Đánh dấu **câu hỏi yêu thích**
+* Tải lên / tạo bộ câu hỏi (gửi ADMIN duyệt)
+* Cập nhật thông tin cá nhân
 
 ---
 
-### 3.1 Quản lý người dùng (Admin)
+## 4. Tính năng AI (Gemini)
 
-* Thêm / sửa / xóa người dùng
-* Khóa / mở khóa tài khoản
-* Phân quyền (ADMIN / USER)
+Ứng dụng có 2 luồng AI chính:
 
----
+* **Tạo bộ câu hỏi bằng AI** (màn hình tải lên/tạo bộ câu hỏi): AI trả về JSON câu hỏi + đáp án + đáp án đúng và hệ thống lưu vào CSDL.
+* **Giải thích đáp án** khi xem chi tiết bài thi: AI giải thích vì sao đáp án đúng, lỗi sai của thí sinh, kiến thức cần nhớ.
 
-### 3.2 Quản lý bộ câu hỏi (Admin)
-
-* Duyệt bộ câu hỏi người dùng tải lên
-* Chấp nhận / từ chối bộ câu hỏi
-* Sửa / xóa câu hỏi
-* Gán trạng thái:
-
-  * `công khai`
-  * `riêng tư`
+Cấu hình API key xem mục “Cấu hình”.
 
 ---
 
-### 3.3 Quản lý danh mục học tập
+## 5. Tải lên bộ câu hỏi (file) – định dạng hỗ trợ
 
-* Quản lý **cấp học**
+Màn hình “Tải lên / Tạo bộ câu hỏi” hỗ trợ chọn:
 
-  * Tiểu học
-  * THCS
-  * THPT
-  * Đại học
+* **Excel**: `.xlsx`
+* **CSV**: `.csv`
+* **Word**: `.docx`
 
-* Quản lý **môn học**
+### 5.1 Định dạng Excel/CSV (khuyến nghị)
 
-  * Toán
-  * Lý
-  * Hóa
-  * CNTT
+Mỗi dòng là 1 câu hỏi với 6 cột theo thứ tự:
 
----
+1. `question` (hoặc “Câu hỏi”): nội dung câu hỏi
+2. `A`: đáp án A
+3. `B`: đáp án B
+4. `C`: đáp án C
+5. `D`: đáp án D
+6. `correct`: đáp án đúng (**A/B/C/D** hoặc **1/2/3/4**)
 
-### 3.4 Làm bài trắc nghiệm
+Hàng tiêu đề (nếu có) sẽ được tự bỏ qua.
 
-* Chọn cấp học – môn học
-* Chọn số câu hỏi
-* Chọn thời gian làm bài
-* Trộn câu hỏi và đáp án
-* Đếm ngược thời gian
-* Tự động nộp bài khi hết giờ
+### 5.2 Định dạng Word (.docx)
 
----
-
-### 3.5 Chấm điểm tự động
-
-* Tính tổng điểm
-* Đếm số câu đúng
-* Đếm số câu sai
-* Hiển thị đáp án đúng
-* Lưu lịch sử làm bài
+* Mỗi câu bắt đầu bằng chuỗi **`Câu hỏi:`**
+* Đáp án đặt cùng đoạn hoặc các đoạn sau, có nhãn **A/B/C/D** (ví dụ: `A. ...`, `B) ...`)
+* **Đáp án đúng được bôi đậm (Bold)** trong file Word
 
 ---
 
-### 3.6 Tải lên bộ câu hỏi
+## 6. Cơ sở dữ liệu (MySQL)
 
-* Upload file:
+Ứng dụng kết nối MySQL tại:
 
-  * `.xlsx`
+* File: `UngDungTracNghiem/src/database/KetNoiDB.java`
+* Mặc định: `jdbc:mysql://localhost:3307/trac_nghiem`
 
-* Hệ thống tự động đọc file
-* Tạo câu hỏi và đáp án
-* Gửi Admin duyệt
+Bạn cần tạo database và các bảng tương ứng (tham khảo truy vấn trong `UngDungTracNghiem/src/dao`).
+Các bảng đang được sử dụng trong code:
 
----
-
-### 3.7 Thống kê và báo cáo
-
-* Tổng số người dùng
-* Tổng số bài thi
-* Điểm trung bình theo môn học
-* Top người dùng có điểm cao
-* Theo dõi tiến bộ học tập theo thời gian
-
----
-
-## 4. Chức năng nâng cao (Cộng điểm)
-
-* Tạo đề thi thông minh (cân bằng mức độ: dễ – trung bình – khó)
-* Chế độ luyện tập (hiển thị đáp án sau mỗi câu)
-* Danh sách câu hỏi yêu thích
-* Xuất file Excel
-* Xuất file PDF
-* In kết quả học tập
-
----
-
-## 🗄️ 5. Thiết kế cơ sở dữ liệu (MySQL)
-
-### Các bảng chính:
-
-* `vai_tro`
 * `nguoi_dung`
 * `cap_hoc`
 * `mon_hoc`
@@ -156,24 +122,54 @@ Hệ thống được xây dựng nhằm:
 * `dap_an`
 * `bai_thi`
 * `chi_tiet_bai_thi`
-* `cau_hoi_yeu_thich`
+* `cau_hoi_yeu_thich` (có hàm tạo nếu chưa có)
 
 ---
 
-## 6. Kiến trúc hệ thống
+## 7. Chạy ứng dụng
 
-Ứng dụng được xây dựng theo mô hình **MVC**:
+### Cách 1: Chạy từ NetBeans (khuyến nghị khi phát triển)
 
-* **Model**: Entity, DAO, Service xử lý dữ liệu
-* **View**: Giao diện Java Swing / JavaFX
-* **Controller**: Điều khiển luồng xử lý giữa View và Model
+1. Mở project `UngDungTracNghiem` bằng Apache NetBeans
+2. Cài đúng JDK (project đang cấu hình `javac.source=25`, `javac.target=25`)
+3. Run project (main class mặc định: `view.FrmDangNhap`)
+
+### Cách 2: Chạy từ file JAR đã build
+
+Từ thư mục `UngDungTracNghiem/dist`:
+
+```bash
+java -jar UngDungTracNghiem.jar
+```
 
 ---
 
-## 7. Mục tiêu đạt được
+## 8. Cấu hình (không hardcode)
 
-* Xây dựng hệ thống có phân quyền rõ ràng
-* Thực hiện chấm điểm tự động chính xác
-* Áp dụng kết nối CSDL bằng JDBC
-* Thiết kế CSDL chuẩn hóa
-* Có chức năng nâng cao phục vụ thực tế giáo dục
+### 8.1 Gemini API Key
+
+Đặt một trong hai cách:
+
+* Biến môi trường: `GEMINI_API_KEY`
+* JVM args: `-Dgemini.api.key=YOUR_KEY`
+
+### 8.2 SMTP gửi OTP (Quên mật khẩu)
+
+Đặt một trong hai cách:
+
+* Biến môi trường: `APP_OTP_EMAIL`, `APP_OTP_PASSWORD`
+* JVM args: `-Dapp.otp.email=... -Dapp.otp.password=...`
+
+Gợi ý: với Gmail nên dùng **App Password 16 ký tự**.
+
+---
+
+## 9. Kiến trúc thư mục (MVC)
+
+* `UngDungTracNghiem/src/model`: model/entity
+* `UngDungTracNghiem/src/dao`: truy xuất dữ liệu (JDBC)
+* `UngDungTracNghiem/src/view`: giao diện Swing (NetBeans `.form`)
+* `UngDungTracNghiem/src/controller`: entrypoint/điều phối
+* `UngDungTracNghiem/src/utils`: tiện ích (UI, AI service, quản lý phiên)
+* `UngDungTracNghiem/src/database`: kết nối CSDL
+
