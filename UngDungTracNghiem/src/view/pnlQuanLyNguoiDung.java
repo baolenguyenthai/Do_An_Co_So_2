@@ -322,14 +322,6 @@ public class pnlQuanLyNguoiDung extends javax.swing.JPanel {
             return;
         }
 
-        if (email.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Địa chỉ Email không được để trống!",
-                "Lỗi",
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         // kiểm tra trùng
         if (dao.existsByTenDangNhap(tenDangNhap)) {
             JOptionPane.showMessageDialog(this,

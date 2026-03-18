@@ -4,6 +4,10 @@
 
 ---
 
+## Video demo
+
+Link Drive: https://drive.google.com/drive/folders/1PwhJSnk0-OOAkqZtnZ4ZPp4JSW-d-v3W?usp=sharing
+
 ## 1. Giới thiệu đề tài
 
 Ứng dụng học tập trắc nghiệm có phân quyền là hệ thống hỗ trợ tạo, quản lý và làm bài thi trắc nghiệm trên máy tính.

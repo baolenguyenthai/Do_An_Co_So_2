@@ -54,6 +54,19 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
     private void lamMoi() {
         txtTenMonHoc.setText("");
         tblMonHoc.clearSelection();
+        taiDuLieu();
+    }
+
+    private void timKiem() {
+        String keyword = txtTenMonHoc.getText().trim();
+        model.setRowCount(0);
+        List<MonHoc> list = keyword.isEmpty() ? monHocDAO.getAll() : monHocDAO.searchByTen(keyword);
+        for (MonHoc m : list) {
+            model.addRow(new Object[]{
+                m.getMonHocId(),
+                m.getTenMonHoc()
+            });
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,6 +86,7 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         txtTenMonHoc = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        btnTimKiem = new javax.swing.JButton();
         btnThem = new javax.swing.JButton();
         btnSua = new javax.swing.JButton();
 
@@ -121,8 +135,14 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel1.setText("Tên Môn học");
 
+        txtTenMonHoc.addActionListener(this::btnTimKiemActionPerformed);
+
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel2.setText("QUẢN LÝ MÔN HỌC");
+
+        btnTimKiem.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnTimKiem.setText("Tìm kiếm");
+        btnTimKiem.addActionListener(this::btnTimKiemActionPerformed);
 
         btnThem.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         btnThem.setText("Thêm");
@@ -153,7 +173,10 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
-                                    .addComponent(txtTenMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(txtTenMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(723, 723, 723)
@@ -168,7 +191,9 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
                 .addGap(75, 75, 75)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtTenMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTenMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -216,6 +241,10 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
     private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed
         lamMoi();
     }//GEN-LAST:event_btnLamMoiActionPerformed
+
+    private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
+        timKiem();
+    }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void tblMonHocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMonHocMouseClicked
         int row = tblMonHoc.getSelectedRow();
@@ -266,6 +295,7 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
     private javax.swing.JButton btnLamMoi;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
+    private javax.swing.JButton btnTimKiem;
     private javax.swing.JButton btnXoa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -25,6 +25,26 @@ public class MonHocDAO {
         return list;
     }
 
+    public List<MonHoc> searchByTen(String keyword) {
+        List<MonHoc> list = new ArrayList<>();
+        String sql = "SELECT * FROM mon_hoc WHERE LOWER(ten_mon_hoc) LIKE LOWER(?)";
+        try (Connection conn = KetNoiDB.ketNoi();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + keyword + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    MonHoc m = new MonHoc();
+                    m.setMonHocId(rs.getInt("mon_hoc_id"));
+                    m.setTenMonHoc(rs.getString("ten_mon_hoc"));
+                    list.add(m);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public MonHoc getById(int id) {
         String sql = "SELECT * FROM mon_hoc WHERE mon_hoc_id = ?";
         try (
