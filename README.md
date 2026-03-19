@@ -7,6 +7,10 @@
 
 Link Drive: https://drive.google.com/drive/folders/1PwhJSnk0-OOAkqZtnZ4ZPp4JSW-d-v3W?usp=sharing
 
+## Video hướng dẫn cài đặt trên hệ điều hành MacOs
+
+Link Drive: https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing
+
 ---
 
 ## 1. Giới thiệu
