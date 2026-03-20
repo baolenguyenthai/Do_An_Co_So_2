@@ -5,7 +5,7 @@
 
 ## Video demo
 
-Link Drive: https://drive.google.com/drive/folders/1PwhJSnk0-OOAkqZtnZ4ZPp4JSW-d-v3W?usp=sharing
+Link Drive: https://drive.google.com/file/d/1SBuAcFTgob5_sQjWZ3oi_UOFFjak2rGL/view?usp=sharing
 
 ## Video hướng dẫn cài đặt trên hệ điều hành MacOs
 
