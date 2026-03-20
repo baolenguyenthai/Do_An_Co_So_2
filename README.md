@@ -175,5 +175,5 @@ Gợi ý: với Gmail nên dùng **App Password 16 ký tự**.
 * `UngDungTracNghiem/src/view`: giao diện Swing (NetBeans `.form`)
 * `UngDungTracNghiem/src/controller`: entrypoint/điều phối
 * `UngDungTracNghiem/src/utils`: tiện ích (UI, AI service, quản lý phiên)
-* `UngDungTracNghiem/src/database`: kết nối CSDL
+* `UngDungTracNghiem/src/database`: kết nối CSDL.
 
