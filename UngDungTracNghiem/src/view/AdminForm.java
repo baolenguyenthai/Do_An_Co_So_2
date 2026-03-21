@@ -29,17 +29,19 @@ public class AdminForm extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
         pnlMain.setLayout(new java.awt.CardLayout());
         pnlQuanLyNguoiDungView = new pnlQuanLyNguoiDung();
         pnlQuanLyBoCauHoiView = new pnlQuanLyBoCauHoi();
         pnlQuanLyMonHocView = new pnlQuanLyMonHoc();
         pnlTaiLenBoCauHoiView = new pnlTaiLenBoCauHoi();
         pnlThongKeBaoCaoView = new pnlThongKeBaoCao();
-        pnlMain.add(pnlQuanLyNguoiDungView, "NGUOI_DUNG");
-        pnlMain.add(pnlQuanLyBoCauHoiView, "BO_CAU_HOI");
-        pnlMain.add(pnlQuanLyMonHocView, "MON_HOC");
-        pnlMain.add(pnlTaiLenBoCauHoiView, "TAI_LEN");
-        pnlMain.add(pnlThongKeBaoCaoView, "THONG_KE");
+        addCardPanel(pnlQuanLyNguoiDungView, "NGUOI_DUNG");
+        addCardPanel(pnlQuanLyBoCauHoiView, "BO_CAU_HOI");
+        addCardPanel(pnlQuanLyMonHocView, "MON_HOC");
+        addCardPanel(pnlTaiLenBoCauHoiView, "TAI_LEN");
+        addCardPanel(pnlThongKeBaoCaoView, "THONG_KE");
 
         customMenuItem(btnQuanLyNguoiDung);
         customMenuItem(btnQuanLyBoCauHoi);
@@ -57,6 +59,11 @@ public class AdminForm extends javax.swing.JFrame {
         setActiveMenu(btnThongKe);
         refreshCardData("THONG_KE");
         ((java.awt.CardLayout) pnlMain.getLayout()).show(pnlMain, "THONG_KE");
+    }
+
+    private void addCardPanel(javax.swing.JPanel panel, String cardName) {
+        panel.setMinimumSize(new java.awt.Dimension(0, 0));
+        pnlMain.add(panel, cardName);
     }
 
     private void customMenuItem(javax.swing.JMenuItem item) {
@@ -245,10 +252,8 @@ public class AdminForm extends javax.swing.JFrame {
                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)));
+                        .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

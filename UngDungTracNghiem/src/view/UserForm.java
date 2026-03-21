@@ -27,15 +27,17 @@ public class UserForm extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
         pnlMain.setLayout(new java.awt.CardLayout());
 
         pnlTaiLenBoCauHoiView = new pnlTaiLenBoCauHoi();
         pnlXemLichSuThiView = new pnlXemLichSuThi();
         pnlXemBangXepHangView = new pnlXemBangXepHang();
 
-        pnlMain.add(pnlTaiLenBoCauHoiView, "TAI_LEN");
-        pnlMain.add(pnlXemLichSuThiView, "LICH_SU");
-        pnlMain.add(pnlXemBangXepHangView, "BANG_XEP_HANG");
+        addCardPanel(pnlTaiLenBoCauHoiView, "TAI_LEN");
+        addCardPanel(pnlXemLichSuThiView, "LICH_SU");
+        addCardPanel(pnlXemBangXepHangView, "BANG_XEP_HANG");
 
         customMenuItem(btnTaiLenBoCauHoi);
         customMenuItem(btnLichSu);
@@ -53,6 +55,11 @@ public class UserForm extends javax.swing.JFrame {
         setActiveMenu(btnLichSu);
         refreshCardData("LICH_SU");
         ((java.awt.CardLayout) pnlMain.getLayout()).show(pnlMain, "LICH_SU");
+    }
+
+    private void addCardPanel(javax.swing.JPanel panel, String cardName) {
+        panel.setMinimumSize(new java.awt.Dimension(0, 0));
+        pnlMain.add(panel, cardName);
     }
 
     private void customMenuItem(javax.swing.JMenuItem item) {

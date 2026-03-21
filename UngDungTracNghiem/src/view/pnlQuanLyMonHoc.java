@@ -25,9 +25,82 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
             return;
         }
         initComponents();
+        apDungBoCucCoGian();
         khoiTaoBang();
         taiDuLieu();
         tblMonHoc.setDefaultEditor(Object.class, null); // ko cho chỉnh sửa ô trong bảng trực tiếp;
+    }
+
+    private void apDungBoCucCoGian() {
+        removeAll();
+        setLayout(new java.awt.BorderLayout());
+        setBackground(java.awt.Color.WHITE);
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        JPanel panelChinh = new JPanel(new java.awt.BorderLayout(0, 16));
+        panelChinh.setBackground(java.awt.Color.WHITE);
+        panelChinh.setBorder(javax.swing.BorderFactory.createEmptyBorder(24, 36, 24, 36));
+        panelChinh.add(jLabel2, java.awt.BorderLayout.NORTH);
+
+        JPanel panelNoiDung = new JPanel(new java.awt.BorderLayout(0, 14));
+        panelNoiDung.setOpaque(false);
+
+        JPanel panelTimKiem = new JPanel(new java.awt.BorderLayout(0, 8));
+        panelTimKiem.setOpaque(false);
+        panelTimKiem.add(jLabel1, java.awt.BorderLayout.NORTH);
+
+        JPanel dongTimKiem = new JPanel(new java.awt.BorderLayout(12, 0));
+        dongTimKiem.setOpaque(false);
+        dongTimKiem.add(txtTenMonHoc, java.awt.BorderLayout.CENTER);
+        btnTimKiem.setPreferredSize(new java.awt.Dimension(120, 38));
+        dongTimKiem.add(btnTimKiem, java.awt.BorderLayout.EAST);
+        dongTimKiem.setPreferredSize(new java.awt.Dimension(720, 38));
+        dongTimKiem.setMaximumSize(new java.awt.Dimension(820, 38));
+
+        JPanel gioiHanTimKiem = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        gioiHanTimKiem.setOpaque(false);
+        gioiHanTimKiem.add(dongTimKiem);
+        panelTimKiem.add(gioiHanTimKiem, java.awt.BorderLayout.CENTER);
+        panelNoiDung.add(panelTimKiem, java.awt.BorderLayout.NORTH);
+
+        JPanel panelBangVaNut = new JPanel(new java.awt.BorderLayout(14, 0));
+        panelBangVaNut.setOpaque(false);
+        panelBangVaNut.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        JPanel cotNut = new JPanel();
+        cotNut.setOpaque(false);
+        cotNut.setLayout(new javax.swing.BoxLayout(cotNut, javax.swing.BoxLayout.Y_AXIS));
+        cotNut.add(btnThem);
+        cotNut.add(javax.swing.Box.createVerticalStrut(12));
+        cotNut.add(btnSua);
+        cotNut.add(javax.swing.Box.createVerticalStrut(12));
+        cotNut.add(btnXoa);
+        cotNut.add(javax.swing.Box.createVerticalStrut(12));
+        cotNut.add(btnLamMoi);
+
+        java.awt.Dimension buttonSize = new java.awt.Dimension(120, 40);
+        btnThem.setMaximumSize(buttonSize);
+        btnSua.setMaximumSize(buttonSize);
+        btnXoa.setMaximumSize(buttonSize);
+        btnLamMoi.setMaximumSize(buttonSize);
+
+        panelBangVaNut.add(cotNut, java.awt.BorderLayout.EAST);
+        panelNoiDung.add(panelBangVaNut, java.awt.BorderLayout.CENTER);
+
+        panelChinh.add(panelNoiDung, java.awt.BorderLayout.CENTER);
+
+        JPanel panelCanGiua = new JPanel();
+        panelCanGiua.setBackground(java.awt.Color.WHITE);
+        panelCanGiua.setLayout(new javax.swing.BoxLayout(panelCanGiua, javax.swing.BoxLayout.Y_AXIS));
+        panelChinh.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        panelChinh.setMaximumSize(new java.awt.Dimension(1320, Integer.MAX_VALUE));
+        panelCanGiua.add(panelChinh);
+        panelCanGiua.add(javax.swing.Box.createVerticalGlue());
+        add(panelCanGiua, java.awt.BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
     }
     
     private void khoiTaoBang() {
@@ -125,11 +198,11 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1317, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1317, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
         );
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
@@ -212,7 +285,7 @@ public class pnlQuanLyMonHoc extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

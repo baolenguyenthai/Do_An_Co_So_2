@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import model.NguoiDung;
 import dao.NguoiDungDAO;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 /**
  *
  * @author lebao
@@ -17,10 +18,118 @@ public class pnlQuanLyNguoiDung extends javax.swing.JPanel {
      */
     public pnlQuanLyNguoiDung() {
         initComponents();
+        apDungBoCucCoGian();
         initComboBox();
         tblNguoiDung.setDefaultEditor(Object.class, null); // ko cho chỉnh sửa ô trong bảng trực tiếp
         loadTable();
         clearForm(); 
+    }
+
+    private void apDungBoCucCoGian() {
+        removeAll();
+        setLayout(new java.awt.BorderLayout());
+        setBackground(java.awt.Color.WHITE);
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        JPanel panelChinh = new JPanel(new java.awt.BorderLayout(0, 14));
+        panelChinh.setBackground(java.awt.Color.WHITE);
+        panelChinh.setBorder(javax.swing.BorderFactory.createEmptyBorder(24, 36, 24, 36));
+        panelChinh.add(jLabel1, java.awt.BorderLayout.NORTH);
+
+        JPanel panelNoiDung = new JPanel(new java.awt.BorderLayout(0, 14));
+        panelNoiDung.setOpaque(false);
+
+        JPanel panelForm = new JPanel(new java.awt.GridBagLayout());
+        panelForm.setOpaque(false);
+        panelForm.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 0, 0, 0));
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
+        gbc.insets = new java.awt.Insets(0, 0, 6, 10);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panelForm.add(jLabel4, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new java.awt.Insets(0, 10, 6, 0);
+        panelForm.add(jLabel2, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new java.awt.Insets(0, 0, 12, 10);
+        panelForm.add(txtTenDangNhap, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new java.awt.Insets(0, 10, 12, 0);
+        panelForm.add(txtMatKhau, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.insets = new java.awt.Insets(0, 0, 6, 10);
+        panelForm.add(jLabel3, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new java.awt.Insets(0, 10, 6, 0);
+        panelForm.add(jLabel6, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.insets = new java.awt.Insets(0, 0, 12, 10);
+        panelForm.add(txtHoTen, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new java.awt.Insets(0, 10, 12, 0);
+        panelForm.add(txtEmail, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.insets = new java.awt.Insets(0, 0, 6, 10);
+        panelForm.add(jLabel5, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new java.awt.Insets(0, 10, 6, 0);
+        panelForm.add(jLabel7, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.insets = new java.awt.Insets(0, 0, 0, 10);
+        panelForm.add(cbVaiTro, gbc);
+        gbc.gridx = 1;
+        gbc.insets = new java.awt.Insets(0, 10, 0, 0);
+        panelForm.add(cbTrangThai, gbc);
+
+        JPanel panelNut = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 16, 0));
+        panelNut.setOpaque(false);
+        panelNut.add(btnThem);
+        panelNut.add(btnSua);
+        panelNut.add(btnXoa);
+        panelNut.add(btnLamMoi);
+
+        java.awt.Dimension buttonSize = new java.awt.Dimension(110, 36);
+        btnThem.setPreferredSize(buttonSize);
+        btnSua.setPreferredSize(buttonSize);
+        btnXoa.setPreferredSize(buttonSize);
+        btnLamMoi.setPreferredSize(buttonSize);
+
+        JPanel panelTren = new JPanel(new java.awt.BorderLayout(0, 12));
+        panelTren.setOpaque(false);
+        panelTren.add(panelForm, java.awt.BorderLayout.CENTER);
+        panelTren.add(panelNut, java.awt.BorderLayout.SOUTH);
+        panelNoiDung.add(panelTren, java.awt.BorderLayout.NORTH);
+
+        jScrollPane1.setViewportView(tblNguoiDung);
+        panelNoiDung.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        panelChinh.add(panelNoiDung, java.awt.BorderLayout.CENTER);
+
+        JPanel panelCanGiua = new JPanel();
+        panelCanGiua.setBackground(java.awt.Color.WHITE);
+        panelCanGiua.setLayout(new javax.swing.BoxLayout(panelCanGiua, javax.swing.BoxLayout.Y_AXIS));
+        panelChinh.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        panelChinh.setMaximumSize(new java.awt.Dimension(1320, Integer.MAX_VALUE));
+        panelCanGiua.add(panelChinh);
+        panelCanGiua.add(javax.swing.Box.createVerticalGlue());
+        add(panelCanGiua, java.awt.BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
     }
 
     
@@ -202,7 +311,7 @@ public class pnlQuanLyNguoiDung extends javax.swing.JPanel {
                             .addComponent(btnLamMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel5)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1475, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cbVaiTro, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtHoTen, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
@@ -252,7 +361,7 @@ public class pnlQuanLyNguoiDung extends javax.swing.JPanel {
                     .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnLamMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
                 .addGap(81, 81, 81))
         );
 

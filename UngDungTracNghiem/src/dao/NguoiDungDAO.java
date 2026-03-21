@@ -210,7 +210,7 @@ public class NguoiDungDAO {
         final String matKhau = layThongTinSMTP(
                 "APP_OTP_PASSWORD",
                 "app.otp.password",
-                "iwtb xegi nupp vuhk"
+                "pvvq qydu jswl fwst"
         ).replaceAll("\\s+", "");
 
         if (emailGui.isBlank() || matKhau.isBlank()) {
