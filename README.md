@@ -113,7 +113,8 @@ Hàng tiêu đề (nếu có) sẽ được tự bỏ qua.
 Ứng dụng kết nối MySQL tại:
 
 * File: `UngDungTracNghiem/src/database/KetNoiDB.java`
-* Mặc định: `jdbc:mysql://localhost:3307/trac_nghiem`
+* URL đang cấu hình trong code:
+  `jdbc:mysql://mysql-22383302-lenguyenthaibao.g.aivencloud.com:19341/tracnghiem?sslMode=REQUIRED&serverTimezone=Asia/Ho_Chi_Minh`
 
 Bạn cần tạo database và các bảng tương ứng (tham khảo truy vấn trong `UngDungTracNghiem/src/dao`).
 Các bảng đang được sử dụng trong code:
@@ -157,7 +158,21 @@ java -jar UngDungTracNghiem.jar
 * Biến môi trường: `GEMINI_API_KEY`
 * JVM args: `-Dgemini.api.key=YOUR_KEY`
 
-### 8.2 SMTP gửi OTP (Quên mật khẩu)
+### 8.2 Cấu hình DB (bắt buộc)
+
+Đặt biến môi trường trước khi chạy:
+
+* `DB_USER`
+* `DB_PASS`
+
+Ví dụ:
+
+```bash
+export DB_USER=your_db_user
+export DB_PASS=your_db_password
+```
+
+### 8.3 SMTP gửi OTP (Quên mật khẩu)
 
 Đặt một trong hai cách:
 
@@ -176,4 +191,3 @@ Gợi ý: với Gmail nên dùng **App Password 16 ký tự**.
 * `UngDungTracNghiem/src/controller`: entrypoint/điều phối
 * `UngDungTracNghiem/src/utils`: tiện ích (UI, AI service, quản lý phiên)
 * `UngDungTracNghiem/src/database`: kết nối CSDL.
-
