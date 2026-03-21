@@ -1,193 +1,190 @@
-# ỨNG DỤNG HỌC TẬP TRẮC NGHIỆM CÓ PHÂN QUYỀN
-*(Java Swing + MySQL – Kiến trúc MVC, phát triển bằng Apache NetBeans/Ant)*
+# Ứng Dụng Trắc Nghiệm Có Phân Quyền (Java Swing + MySQL)
 
----
+Ứng dụng desktop hỗ trợ tạo bộ câu hỏi, thi trắc nghiệm, chấm điểm tự động, thống kê và báo cáo, có phân quyền `ADMIN`/`USER`.
 
-## Video demo
+## Demo
 
-Link Drive: https://drive.google.com/file/d/1SBuAcFTgob5_sQjWZ3oi_UOFFjak2rGL/view?usp=sharing
+- Video demo: <https://drive.google.com/file/d/1SBuAcFTgob5_sQjWZ3oi_UOFFjak2rGL/view?usp=sharing>
+- Video cài đặt macOS: <https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing>
 
-## Video hướng dẫn cài đặt trên hệ điều hành MacOs
+## Tính năng chính
 
-Link Drive: https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing
+- Đăng nhập, đăng ký, quên mật khẩu qua OTP email.
+- Phân quyền:
+1. `ADMIN`: quản lý người dùng, môn học, bộ câu hỏi, duyệt bộ câu hỏi, thống kê/báo cáo.
+2. `USER`: làm bài thi, xem lịch sử kết quả, bảng xếp hạng, câu hỏi yêu thích, tải lên/tạo bộ câu hỏi.
+- Tạo bộ câu hỏi bằng AI (Gemini) và tải lên từ file (luồng lưu CSDL hiện đã hoàn thiện cho `.docx`).
+- Xem chi tiết bài thi và gọi AI giải thích đáp án.
+- Xuất báo cáo chi tiết ra Excel.
 
----
+## Công nghệ sử dụng
 
-## 1. Giới thiệu
+- Java Swing (NetBeans Form).
+- JDBC + MySQL.
+- Gson.
+- OpenCSV.
+- Apache POI (Excel/Word).
+- Jakarta Mail (SMTP OTP).
 
-Ứng dụng hỗ trợ **tạo – quản lý – làm bài thi trắc nghiệm** trên máy tính, có **phân quyền ADMIN/USER** và lưu dữ liệu trên **MySQL**.
+Thư viện runtime nằm trong `UngDungTracNghiem/dist/lib`.
 
-Điểm nổi bật:
+## Cấu trúc dự án
 
-* Đăng nhập/đăng ký, khoá tài khoản, quên mật khẩu bằng **OTP email**
-* Quản lý danh mục **Cấp học** và **Môn học**
-* Quản lý **Bộ câu hỏi / Câu hỏi / Đáp án** + duyệt bộ câu hỏi
-* Làm bài thi, chấm điểm tự động, lưu **lịch sử thi**
-* **Yêu thích câu hỏi**, xem bảng xếp hạng
-* Thống kê/báo cáo và **xuất báo cáo Excel**
-* Tính năng AI (Gemini): **tạo bộ câu hỏi** và **giải thích đáp án**
+```text
+Do_An_Co_So_2/
+├── README.md
+├── database/
+│   └── database.sql
+├── UngDungTracNghiem/
+│   ├── src/
+│   │   ├── controller/
+│   │   ├── dao/
+│   │   ├── database/
+│   │   ├── model/
+│   │   ├── utils/
+│   │   └── view/
+│   ├── dist/
+│   │   ├── UngDungTracNghiem.jar
+│   │   └── lib/
+│   └── nbproject/
+├── UngDungTracNghiem-Setup.exe
+└── UngDungTracNghiem-1.0.dmg
+```
 
----
+## Yêu cầu môi trường
 
-## 2. Công nghệ & thư viện
+- JDK 25 (`javac.source=25`, `javac.target=25`).
+- MySQL 8+.
+- (Tùy chọn) Apache NetBeans nếu phát triển từ source.
+- (Tùy chọn) Apache Ant nếu build qua dòng lệnh.
 
-* **Java** (UI: **Swing** + NetBeans `.form`)
-* **MySQL** + **JDBC**
-* Thư viện sử dụng (đã có trong `UngDungTracNghiem/dist/lib`):
-  * MySQL Connector/J
-  * Apache POI (Excel + Word `.docx`)
-  * OpenCSV
-  * Gson
-  * Jakarta Mail (gửi OTP)
-  * Log4j
+## Thiết lập cơ sở dữ liệu
 
----
-
-## 3. Phân quyền hệ thống
-
-Trong bảng `nguoi_dung`:
-
-* `vai_tro_id = 1` → **ADMIN**
-* `vai_tro_id != 1` → **USER**
-* `trang_thai = 0` → tài khoản **bị khoá** (không đăng nhập được)
-
-### ADMIN
-
-* Quản lý người dùng: thêm/sửa/xoá, khoá/mở khoá, phân quyền
-* Quản lý bộ câu hỏi: duyệt/trạng thái, công khai/riêng tư, chỉnh sửa nội dung
-* Quản lý danh mục: cấp học – môn học
-* Thống kê & báo cáo + xuất Excel
-
-### USER
-
-* Làm bài trắc nghiệm, xem chi tiết bài thi
-* Xem lịch sử thi, bảng xếp hạng
-* Đánh dấu **câu hỏi yêu thích**
-* Tải lên / tạo bộ câu hỏi (gửi ADMIN duyệt)
-* Cập nhật thông tin cá nhân
-
----
-
-## 4. Tính năng AI (Gemini)
-
-Ứng dụng có 2 luồng AI chính:
-
-* **Tạo bộ câu hỏi bằng AI** (màn hình tải lên/tạo bộ câu hỏi): AI trả về JSON câu hỏi + đáp án + đáp án đúng và hệ thống lưu vào CSDL.
-* **Giải thích đáp án** khi xem chi tiết bài thi: AI giải thích vì sao đáp án đúng, lỗi sai của thí sinh, kiến thức cần nhớ.
-
-Cấu hình API key xem mục “Cấu hình”.
-
----
-
-## 5. Tải lên bộ câu hỏi (file) – định dạng hỗ trợ
-
-Màn hình “Tải lên / Tạo bộ câu hỏi” hỗ trợ chọn:
-
-* **Excel**: `.xlsx`
-* **CSV**: `.csv`
-* **Word**: `.docx`
-
-### 5.1 Định dạng Excel/CSV (khuyến nghị)
-
-Mỗi dòng là 1 câu hỏi với 6 cột theo thứ tự:
-
-1. `question` (hoặc “Câu hỏi”): nội dung câu hỏi
-2. `A`: đáp án A
-3. `B`: đáp án B
-4. `C`: đáp án C
-5. `D`: đáp án D
-6. `correct`: đáp án đúng (**A/B/C/D** hoặc **1/2/3/4**)
-
-Hàng tiêu đề (nếu có) sẽ được tự bỏ qua.
-
-### 5.2 Định dạng Word (.docx)
-
-* Mỗi câu bắt đầu bằng chuỗi **`Câu hỏi:`**
-* Đáp án đặt cùng đoạn hoặc các đoạn sau, có nhãn **A/B/C/D** (ví dụ: `A. ...`, `B) ...`)
-* **Đáp án đúng được bôi đậm (Bold)** trong file Word
-
----
-
-## 6. Cơ sở dữ liệu (MySQL)
-
-Ứng dụng kết nối MySQL tại:
-
-* File: `UngDungTracNghiem/src/database/KetNoiDB.java`
-* URL đang cấu hình trong code:
-  `jdbc:mysql://mysql-22383302-lenguyenthaibao.g.aivencloud.com:19341/tracnghiem?sslMode=REQUIRED&serverTimezone=Asia/Ho_Chi_Minh`
-
-Bạn cần tạo database và các bảng tương ứng (tham khảo truy vấn trong `UngDungTracNghiem/src/dao`).
-Các bảng đang được sử dụng trong code:
-
-* `nguoi_dung`
-* `cap_hoc`
-* `mon_hoc`
-* `bo_cau_hoi`
-* `cau_hoi`
-* `dap_an`
-* `bai_thi`
-* `chi_tiet_bai_thi`
-* `cau_hoi_yeu_thich` (có hàm tạo nếu chưa có)
-
----
-
-## 7. Chạy ứng dụng
-
-### Cách 1: Chạy từ NetBeans (khuyến nghị khi phát triển)
-
-1. Mở project `UngDungTracNghiem` bằng Apache NetBeans
-2. Cài đúng JDK (project đang cấu hình `javac.source=25`, `javac.target=25`)
-3. Run project (main class mặc định: `view.FrmDangNhap`)
-
-### Cách 2: Chạy từ file JAR đã build
-
-Từ thư mục `UngDungTracNghiem/dist`:
+1. Tạo database `tracnghiem`.
+2. Import schema + dữ liệu mẫu:
 
 ```bash
+mysql -u <user> -p tracnghiem < database/database.sql
+```
+
+3. Kiểm tra kết nối tại file:
+
+- `UngDungTracNghiem/src/database/KetNoiDB.java`
+
+Mặc định code đang dùng:
+
+- `DB_URL`: `jdbc:mysql://mysql-22383302-lenguyenthaibao.g.aivencloud.com:19341/tracnghiem?sslMode=REQUIRED&serverTimezone=Asia/Ho_Chi_Minh`
+- `HARDCODED_DB_USER`
+- `HARDCODED_DB_PASS`
+
+Bạn cần cập nhật thông tin DB đúng môi trường của bạn trước khi chạy.
+
+## Cấu hình AI Gemini
+
+`GeminiService` hỗ trợ đọc API key theo thứ tự:
+
+1. Biến môi trường `GEMINI_API_KEY`
+2. JVM property `-Dgemini.api.key=...`
+3. `HARDCODED_API_KEY` trong `UngDungTracNghiem/src/utils/GeminiService.java`
+
+Tùy chọn model:
+
+- `GEMINI_MODEL` hoặc `-Dgemini.model=...`
+
+## Cấu hình SMTP OTP (Quên mật khẩu)
+
+`NguoiDungDAO.guiOTP(...)` đọc cấu hình theo thứ tự:
+
+1. `APP_OTP_EMAIL`, `APP_OTP_PASSWORD`
+2. `-Dapp.otp.email=... -Dapp.otp.password=...`
+3. Giá trị fallback trong code
+
+Khuyến nghị dùng Gmail App Password 16 ký tự.
+
+## Chạy ứng dụng
+
+### Cách 1: Chạy bản đóng gói (khuyến nghị nhanh)
+
+```bash
+cd UngDungTracNghiem/dist
 java -jar UngDungTracNghiem.jar
 ```
 
----
+Hoặc dùng file cài đặt:
 
-## 8. Cấu hình (không hardcode)
+- Windows: `UngDungTracNghiem-Setup.exe`
+- macOS: `UngDungTracNghiem-1.0.dmg`
 
-### 8.1 Gemini API Key
+### Cách 2: Chạy từ NetBeans (phát triển)
 
-Đặt một trong hai cách:
+1. Mở project `UngDungTracNghiem`.
+2. Đảm bảo JDK 25.
+3. Main class: `view.FrmDangNhap`.
+4. Nếu thiếu thư viện do đường dẫn local cũ trong `nbproject/project.properties`, re-link lại từ `UngDungTracNghiem/dist/lib`.
 
-* Biến môi trường: `GEMINI_API_KEY`
-* JVM args: `-Dgemini.api.key=YOUR_KEY`
+## Build từ source
 
-### 8.2 Cấu hình DB (bắt buộc)
-
-Đặt biến môi trường trước khi chạy:
-
-* `DB_USER`
-* `DB_PASS`
-
-Ví dụ:
+Project theo chuẩn NetBeans/Ant (`build.xml`).
 
 ```bash
-export DB_USER=your_db_user
-export DB_PASS=your_db_password
+cd UngDungTracNghiem
+ant clean jar
 ```
 
-### 8.3 SMTP gửi OTP (Quên mật khẩu)
+Lưu ý: máy cần cài sẵn `ant`.
 
-Đặt một trong hai cách:
+## Định dạng file tải lên bộ câu hỏi
 
-* Biến môi trường: `APP_OTP_EMAIL`, `APP_OTP_PASSWORD`
-* JVM args: `-Dapp.otp.email=... -Dapp.otp.password=...`
+Màn hình `TẢI LÊN / TẠO BỘ CÂU HỎI` hỗ trợ:
 
-Gợi ý: với Gmail nên dùng **App Password 16 ký tự**.
+- `.xlsx`
+- `.csv`
+- `.docx`
 
----
+Lưu ý hiện trạng:
 
-## 9. Kiến trúc thư mục (MVC)
+- `.xlsx` và `.csv`: đang dùng tốt cho luồng đọc/preview nội dung.
+- `.docx`: đã có luồng parse và lưu câu hỏi + đáp án vào CSDL.
 
-* `UngDungTracNghiem/src/model`: model/entity
-* `UngDungTracNghiem/src/dao`: truy xuất dữ liệu (JDBC)
-* `UngDungTracNghiem/src/view`: giao diện Swing (NetBeans `.form`)
-* `UngDungTracNghiem/src/controller`: entrypoint/điều phối
-* `UngDungTracNghiem/src/utils`: tiện ích (UI, AI service, quản lý phiên)
-* `UngDungTracNghiem/src/database`: kết nối CSDL.
+### Excel/CSV
+
+Mỗi dòng gồm 6 cột:
+
+1. Nội dung câu hỏi
+2. Đáp án A
+3. Đáp án B
+4. Đáp án C
+5. Đáp án D
+6. Đáp án đúng (`A/B/C/D` hoặc `1/2/3/4`)
+
+### Word (.docx)
+
+- Mỗi câu có tiền tố `Câu hỏi:`.
+- Đáp án có nhãn `A/B/C/D` (ví dụ `A.`, `B)`, ...).
+- Đáp án đúng được in đậm (Bold).
+
+## Luồng phân quyền và nghiệp vụ quan trọng
+
+- `vai_tro_id = 1`: vào `AdminForm`.
+- `vai_tro_id != 1`: vào `UserForm`.
+- `trang_thai = 0`: tài khoản bị khóa, không đăng nhập.
+- Chỉ bộ câu hỏi `DA_DUYET` mới xuất hiện ở màn thi.
+- Bộ câu hỏi không công khai (`cong_khai = 0`) sẽ:
+1. Không cho xem chi tiết đáp án từ lịch sử.
+2. Không cho làm lại nếu user đã thi bộ đó.
+3. Không cho thêm câu hỏi vào danh sách yêu thích.
+
+## Tài khoản mẫu (sau khi import `database.sql`)
+
+- Admin: `admin / 12345678`
+- User: `user1 / 123456`
+
+## Lưu ý triển khai thực tế
+
+- Mật khẩu người dùng hiện đang lưu plain text trong DB.
+- Một số thông tin nhạy cảm hiện có fallback trong code.
+- Nên chuyển toàn bộ secrets sang biến môi trường/secret manager trước khi đưa production.
+
+## Tác giả
+
+- Lê Nguyễn Thái Bảo
