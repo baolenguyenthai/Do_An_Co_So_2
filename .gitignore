@@ -1,7 +1,0 @@
-.DS_Store
-**/.DS_Store
-
-# Build artifacts
-UngDungTracNghiem/build/
-UngDungTracNghiem/dist/UngDungTracNghiem.jar
-*.class
