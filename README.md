@@ -1,11 +1,14 @@
-# Ứng Dụng Trắc Nghiệm Có Phân Quyền (Java Swing + MySQL)
+# HỆ THỐNG QUẢN LÝ VÀ THI TRẮC NGHIỆM THÔNG MINH (Java Swing + MySQL)
 
 Ứng dụng desktop hỗ trợ tạo bộ câu hỏi, thi trắc nghiệm, chấm điểm tự động, thống kê và báo cáo, có phân quyền `ADMIN`/`USER`.
 
-## Demo
+## Video demo:
 
-- Video demo: <https://drive.google.com/file/d/1SBuAcFTgob5_sQjWZ3oi_UOFFjak2rGL/view?usp=sharing>
-- Video cài đặt macOS: <https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing>
+- Link video demo: <https://drive.google.com/file/d/1SBuAcFTgob5_sQjWZ3oi_UOFFjak2rGL/view?usp=sharing>
+
+## Video hướng dẫn cài đặt trên MACOS:
+
+- Link video cài đặt macOS: <https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing>
 
 ## Tính năng chính
 
