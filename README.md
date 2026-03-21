@@ -6,7 +6,11 @@
 
 - Link video demo: <https://drive.google.com/file/d/1SBuAcFTgob5_sQjWZ3oi_UOFFjak2rGL/view?usp=sharing>
 
-## Video hướng dẫn cài đặt trên MACOS:
+## Video hướng dẫn cài đặt trên hệ điều hành WINDOWS
+
+- Link video cài đặt <https://drive.google.com/file/d/1ggcxpaPIBe3__5Al2lesEIQDTDDQd8d9/view?usp=sharing>
+
+## Video hướng dẫn cài đặt trên hệ điều hành MACOS:
 
 - Link video cài đặt macOS: <https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing>
 
