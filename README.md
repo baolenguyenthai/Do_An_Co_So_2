@@ -8,11 +8,11 @@
 
 ## Video hướng dẫn cài đặt trên hệ điều hành WINDOWS
 
-- Link video cài đặt <https://drive.google.com/file/d/1ggcxpaPIBe3__5Al2lesEIQDTDDQd8d9/view?usp=sharing>
+- Link drive video cài đặt windows <https://drive.google.com/file/d/1SgA_CutadBO_xehH6CXH_iIWj4z-qeWI/view?usp=sharing>
 
 ## Video hướng dẫn cài đặt trên hệ điều hành MACOS:
 
-- Link video cài đặt macOS: <https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing>
+- Link drive video cài đặt macOS: <https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing>
 
 ## Tính năng chính
 
