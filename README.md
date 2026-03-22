@@ -4,15 +4,18 @@
 
 ## Video demo:
 
-- Link video demo: <https://drive.google.com/file/d/1SBuAcFTgob5_sQjWZ3oi_UOFFjak2rGL/view?usp=sharing>
+- Link video demo:
+  <https://drive.google.com/file/d/1SBuAcFTgob5_sQjWZ3oi_UOFFjak2rGL/view?usp=sharing>
 
 ## Video hướng dẫn cài đặt trên hệ điều hành WINDOWS
 
-- Link drive video cài đặt windows <https://drive.google.com/file/d/1SgA_CutadBO_xehH6CXH_iIWj4z-qeWI/view?usp=sharing>
+- Link drive video cài đặt windows
+  <https://drive.google.com/file/d/1SgA_CutadBO_xehH6CXH_iIWj4z-qeWI/view?usp=sharing>
 
 ## Video hướng dẫn cài đặt trên hệ điều hành MACOS:
 
-- Link drive video cài đặt macOS: <https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing>
+- Link drive video cài đặt macOS:
+  <https://drive.google.com/file/d/11q25Lmmt6FXh8BX0aY_SJb4XOmFyLPa9/view?usp=sharing>
 
 ## Tính năng chính
 
